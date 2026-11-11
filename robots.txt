@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saidumpala01.github.io/portfolio/sitemap.xml
