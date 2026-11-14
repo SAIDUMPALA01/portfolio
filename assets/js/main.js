@@ -69,7 +69,7 @@
 
   /* ---------- Copy buttons ---------- */
   var COPY = {
-    email: 'dumpalasairamkrishnareddy@gmail.com',
+    email: 'Sai.Dumpalaa@gmail.com',
     bibtex: '@misc{dumpala2026sixdim,\n  author    = {Dumpala, Sai},\n  title     = {AI Model Performance in CV Generation and Consistency Testing: A Practical Six-Dimension Evaluation Framework},\n  year      = {2026},\n  publisher = {Zenodo},\n  doi       = {10.5281/zenodo.20102941}\n}'
   };
   function copyText(text) {
