@@ -38,6 +38,10 @@ assets/img/           favicon, social preview, project screenshots
 .github/workflows/    asset check + GitHub Pages deploy
 ```
 
+## 3D portfolio
+
+An interactive 3D version of the site lives in [`3d/index.html`](3d/index.html) and is served at https://saidumpala01.github.io/portfolio/3d/ (three.js, no build step).
+
 ## Run it locally
 
 ```bash

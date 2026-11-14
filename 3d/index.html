@@ -1,0 +1,490 @@
+<title>Sai Dumpala</title>
+<meta name="description" content="Sai Dumpala, AI/ML Engineer in London. LLM applications and the evaluations that show whether they work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an evaluation instrument. A live 3D six-dimension scoring frame opens the page; the work reads below it as lab records. Single deliberate dark look. */
+:root{
+  --ink:#0d1320;        /* page ground */
+  --panel:#141c2e;      /* raised surfaces */
+  --line:#26314a;       /* rules, borders */
+  --paper:#ece7dc;      /* main text */
+  --muted:#9aa5bb;      /* secondary text */
+  --signal:#f2a65a;     /* accent: the judge's mark */
+  --grid:#6fa8c9;       /* instrument linework */
+  --good:#8fd1a8;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --s-1:.8125rem; --s0:1rem; --s1:1.2rem; --s2:1.6rem; --s3:2.3rem; --s4:clamp(2.6rem, 7vw, 4.6rem);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--f-body);font-size:var(--s0);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.mono{font-family:var(--f-mono)}
+.eyebrow{font-family:var(--f-mono);font-size:var(--s-1);letter-spacing:.12em;text-transform:uppercase;color:var(--grid)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.05}
+h2{font-size:var(--s3);font-weight:800;letter-spacing:-.01em}
+h3{font-size:var(--s1);font-weight:700}
+p{margin:0}
+
+/* ---------- top bar ---------- */
+.top{border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.mark{font-family:var(--f-display);font-weight:800;font-size:1.05rem;letter-spacing:.01em;text-decoration:none}
+.mark span{color:var(--signal)}
+.nav{display:flex;gap:18px;flex-wrap:wrap;font-size:var(--s-1);font-family:var(--f-mono)}
+.nav a{text-decoration:none;color:var(--muted)}
+.nav a:hover{color:var(--paper)}
+
+/* ---------- hero ---------- */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:center;padding-block:40px 24px}
+.hero-copy{display:flex;flex-direction:column;gap:20px;min-width:0}
+.hero h1{font-size:var(--s4);font-weight:800;letter-spacing:-.025em}
+.hero h1 em{font-style:normal;color:var(--signal)}
+.thesis{font-size:var(--s1);color:var(--paper);max-width:34ch;line-height:1.45}
+.open{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--f-mono);font-size:.75rem;border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--muted);background:var(--panel)}
+.chip b{color:var(--good);font-weight:500}
+.ctas{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.85rem;text-decoration:none;padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);transition:border-color .2s, transform .2s}
+.btn:hover{border-color:var(--grid);transform:translateY(-1px)}
+.btn.primary{background:var(--signal);color:var(--ink);border-color:var(--signal);font-weight:500}
+
+.stage{position:relative;width:100%;aspect-ratio:1.05;max-width:100%;max-height:620px;min-height:340px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:
+  radial-gradient(120% 90% at 50% 40%, #16223a 0%, var(--ink) 70%);cursor:grab;touch-action:pan-y}
+.stage.drag{cursor:grabbing}
+.stage canvas{display:block;width:100%!important;height:100%!important}
+.labels{position:absolute;inset:0;pointer-events:none}
+.lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--f-mono);font-size:.68rem;color:var(--grid);letter-spacing:.04em;transition:opacity .2s}
+.lbl.proj{pointer-events:auto;cursor:pointer;color:var(--paper);background:rgba(13,19,32,.78);border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:.72rem}
+.lbl.proj:hover,.lbl.proj.hot{border-color:var(--signal);color:var(--signal)}
+.stage-cap{position:absolute;left:12px;bottom:10px;right:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.68rem;color:var(--muted);pointer-events:none}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted);font-family:var(--f-mono);font-size:.8rem}
+
+/* ---------- sections ---------- */
+section{padding-block:56px;border-top:1px solid var(--line)}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.sec-head p{color:var(--muted);max-width:52ch}
+
+.projects{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:16px}
+.card{display:flex;flex-direction:column;gap:14px;min-width:0;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel);transition:border-color .3s, box-shadow .3s}
+.card.flash{border-color:var(--signal);box-shadow:0 0 0 3px rgba(242,166,90,.18)}
+.card .kind{font-family:var(--f-mono);font-size:.72rem;color:var(--grid);letter-spacing:.06em;text-transform:uppercase}
+.card p{color:#cfd5e2;font-size:.94rem}
+.metrics{display:flex;flex-wrap:wrap;gap:6px}
+.metric{font-family:var(--f-mono);font-size:.74rem;padding:3px 8px;border-radius:5px;background:rgba(111,168,201,.12);color:var(--paper);font-variant-numeric:tabular-nums}
+.metric.warn{background:rgba(242,166,90,.14);color:var(--signal)}
+.stack{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.links{display:flex;gap:14px;flex-wrap:wrap;margin-top:auto;font-family:var(--f-mono);font-size:.8rem}
+.links a{color:var(--signal);text-decoration:none;border-bottom:1px solid rgba(242,166,90,.35)}
+.links a:hover{border-bottom-color:var(--signal)}
+
+/* research */
+.research{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.paper{display:flex;flex-direction:column;gap:14px}
+.paper .title{font-family:var(--f-display);font-size:var(--s2);font-weight:700;line-height:1.15}
+.paper ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;color:#cfd5e2}
+.chart{border:1px solid var(--line);border-radius:12px;padding:20px;background:var(--panel)}
+.chart h3{font-size:1rem;margin-bottom:4px}
+.chart .sub{color:var(--muted);font-size:var(--s-1);margin-bottom:16px}
+.bars{display:flex;flex-direction:column;gap:12px}
+.bar{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 2.6rem;gap:10px;align-items:center;font-size:.85rem}
+.bar .name{color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{height:12px;border-radius:3px;background:repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 20%);position:relative;border:1px solid var(--line)}
+.fill{position:absolute;inset:0 auto 0 0;background:var(--grid);border-radius:2px}
+.bar.top .fill{background:var(--signal)}
+.val{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.scale{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 2.6rem;gap:10px;margin-top:6px;font-family:var(--f-mono);font-size:.66rem;color:var(--muted)}
+.scale .ticks{display:flex;justify-content:space-between}
+
+/* experience */
+.timeline{display:flex;flex-direction:column}
+.role{display:grid;grid-template-columns:12rem minmax(0,1fr);gap:20px;padding-block:18px;border-bottom:1px solid var(--line)}
+.role:first-child{padding-top:0}
+.role .when{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.role .what{display:flex;flex-direction:column;gap:6px;min-width:0}
+.role .org{color:var(--grid);font-family:var(--f-mono);font-size:.8rem}
+.role p{color:#cfd5e2;font-size:.94rem;max-width:68ch}
+
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+.edu{display:flex;flex-direction:column;gap:14px}
+.edu div{display:flex;flex-direction:column;gap:2px}
+.edu .yrs{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.skills{display:flex;flex-direction:column;gap:14px}
+.skillrow{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:12px;align-items:baseline}
+.skillrow span:first-child{font-family:var(--f-mono);font-size:.74rem;color:var(--grid);text-transform:uppercase;letter-spacing:.06em}
+.skillrow span:last-child{color:#cfd5e2;font-size:.94rem}
+
+/* contact */
+.contact .wrap{display:flex;flex-direction:column;gap:22px}
+.contact h2{font-size:var(--s4)}
+.contact p{color:var(--muted);max-width:56ch}
+.foot{padding-block:28px;border-top:1px solid var(--line);font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.foot .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width: 860px){
+  .hero .wrap{grid-template-columns:minmax(0,1fr);padding-block:28px 16px}
+  .stage{aspect-ratio:1;max-height:480px}
+  .research,.two{grid-template-columns:minmax(0,1fr)}
+  .role{grid-template-columns:minmax(0,1fr);gap:6px}
+}
+@media (max-width: 480px){
+  .bar,.scale{grid-template-columns:6.4rem minmax(0,1fr) 2.4rem}
+  .skillrow{grid-template-columns:minmax(0,1fr);gap:2px}
+  .lbl{font-size:.6rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top">Sai Dumpala<span>.</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work">Work</a><a href="#research">Research</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">AI/ML Engineer · London, UK</span>
+        <h1>Sai <em>Dumpala</em></h1>
+        <p class="thesis">I build LLM applications, and the evaluations that show whether they work.</p>
+        <div class="open" aria-label="Availability">
+          <span class="chip"><b>●</b> Open to AI/ML, LLM and Python roles</span>
+          <span class="chip">UK: on-site, hybrid, remote</span>
+          <span class="chip">India: remote</span>
+        </div>
+        <div class="ctas">
+          <a class="btn primary" href="#work">See the work</a>
+          <a class="btn" href="https://github.com/SAIDUMPALA01" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="btn" href="https://www.linkedin.com/in/sai-dumpala" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn" href="https://doi.org/10.5281/zenodo.20102941" target="_blank" rel="noopener">Paper ↗</a>
+        </div>
+      </div>
+
+      <div class="stage" id="stage" role="img" aria-label="Interactive 3D model: a hexagonal scoring frame with the six evaluation dimensions from Sai's paper, five project nodes orbiting it, and a cloud of 1,041 points for the documentation chunks searched by docs-rag-eval. Drag to rotate; select a project to jump to it.">
+        <div class="labels" id="labels"></div>
+        <div class="stage-cap"><span>Drag to rotate · tap a project</span><span>1,041 points = docs-rag-eval's FastAPI chunks</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Work</span>
+          <h2>Five projects, each one measured</h2>
+        </div>
+        <p>Every project ships with tests that run without an API key, and anything that uses a model reports how well it works, including where it fails.</p>
+      </div>
+      <div class="projects">
+        <article class="card" id="p-resumetric">
+          <span class="kind">Deployed service</span>
+          <h3>ResuMetric</h3>
+          <p>Checks AI-generated CVs against their source and flags anything missing or invented. Scores each document on six dimensions from my paper, and can re-run itself to check its own verdict is stable.</p>
+          <div class="metrics"><span class="metric">36 tests</span><span class="metric">6 dimensions</span><span class="metric">2–5 run consistency mode</span></div>
+          <span class="stack">FastAPI · Pydantic · Anthropic API · pypdf · Docker · GitHub Actions</span>
+          <div class="links"><a href="https://saidumpala-resumetric.hf.space" target="_blank" rel="noopener">Live demo ↗</a><a href="https://github.com/SAIDUMPALA01/resumetric" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <article class="card" id="p-sixdim">
+          <span class="kind">Library · CLI · GitHub Action</span>
+          <h3>sixdim-eval</h3>
+          <p>My published framework as installable code. Scores LLM output with an LLM judge or a free offline judge, measures judge-versus-human agreement, and fails CI when output quality drops.</p>
+          <div class="metrics"><span class="metric">36 tests</span><span class="metric">kappa · TPR · TNR</span><span class="metric">paper reproduced in CI</span></div>
+          <span class="stack">Python · Anthropic / OpenAI-compatible clients · GitHub Actions</span>
+          <div class="links"><a href="https://github.com/SAIDUMPALA01/LLm-Evaluation-framework" target="_blank" rel="noopener">Code ↗</a><a href="https://doi.org/10.5281/zenodo.20102941" target="_blank" rel="noopener">Paper ↗</a></div>
+        </article>
+
+        <article class="card" id="p-rag">
+          <span class="kind">RAG + evaluation</span>
+          <h3>docs-rag-eval</h3>
+          <p>Question answering over the FastAPI documentation with numbered citations, and an honest "I don't know" when the docs don't cover it. BM25 written from scratch, compared with TF-IDF and hybrid retrieval.</p>
+          <div class="metrics"><span class="metric">Hit@5 0.952</span><span class="metric">MRR 0.730</span><span class="metric">48 labelled questions</span><span class="metric">1,041 chunks</span></div>
+          <span class="stack">Python · BM25 · TF-IDF · hybrid retrieval · FastAPI · CI quality gate</span>
+          <div class="links"><a href="https://github.com/SAIDUMPALA01/docs-rag-eval" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <article class="card" id="p-mcp">
+          <span class="kind">MCP server · CLI</span>
+          <h3>uk-visa-sponsor-mcp</h3>
+          <p>Lets Claude or any MCP client check whether an employer holds a UK sponsor licence and whether a salary meets the Skilled Worker rules. I built it because I needed it on a Graduate visa.</p>
+          <div class="metrics"><span class="metric">~127,000 sponsors</span><span class="metric">30 tests</span><span class="metric">weekly live-data CI</span></div>
+          <span class="stack">Python · official MCP SDK · RapidFuzz · GOV.UK Content API</span>
+          <div class="links"><a href="https://github.com/SAIDUMPALA01/uk-visa-sponsor-mcp" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <article class="card" id="p-cnn">
+          <span class="kind">Computer vision · MSc project</span>
+          <h3>Pneumonia CNN, audited and rebuilt</h3>
+          <p>I re-checked my own MSc results, found problems that made them unreliable, withdrew the figures and rebuilt the pipeline with patient-level splits, sensitivity-first evaluation and Grad-CAM.</p>
+          <div class="metrics"><span class="metric">23 tests</span><span class="metric">7 issues documented</span><span class="metric warn">re-training pending</span></div>
+          <span class="stack">TensorFlow / Keras · Grad-CAM · FastAPI · Docker</span>
+          <div class="links"><a href="https://github.com/SAIDUMPALA01/medical-image-classification-system1" target="_blank" rel="noopener">Code and audit ↗</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Research · Zenodo, 2026</span>
+          <h2>Measuring the failures nobody sees</h2>
+        </div>
+      </div>
+      <div class="research">
+        <div class="paper">
+          <p class="title">AI Model Performance in CV Generation and Consistency Testing: A Practical Six-Dimension Evaluation Framework</p>
+          <p style="color:var(--muted)">I asked four models to turn degree transcripts into a CV. The most dangerous failures were invisible: sections quietly left out, contact details invented, and no warning to the reader. The paper scores output on six dimensions instead of accuracy alone.</p>
+          <ul>
+            <li>Completeness, contextual utilisation, factual accuracy, confidence calibration, consistency and specification adherence, each scored 1 to 5.</li>
+            <li>The "MISSING" instruction kept factual accuracy at 5/5 for all four models.</li>
+            <li>Asking to "fill in ALL sections" dropped DeepSeek's factual accuracy from 5 to 1.</li>
+          </ul>
+          <div class="links"><a href="https://doi.org/10.5281/zenodo.20102941" target="_blank" rel="noopener">DOI 10.5281/zenodo.20102941 ↗</a><a href="https://scholar.google.com/citations?user=3oToPggAAAAJ" target="_blank" rel="noopener">Google Scholar ↗</a></div>
+        </div>
+        <figure class="chart" style="margin:0">
+          <h3>Experiment 1: average score by model</h3>
+          <p class="sub">Mean of completeness, contextual utilisation, factual accuracy and confidence calibration (1–5). Single annotator, small task set.</p>
+          <div class="bars" id="bars"></div>
+          <div class="scale" aria-hidden="true"><span></span><span class="ticks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></span><span></span></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Experience</span>
+          <h2>Where I've worked</h2>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="role">
+          <span class="when">Aug 2026 – now</span>
+          <div class="what"><h3>AI Training Specialist (Freelance)</h3><span class="org">Mercor · remote</span><p>Review and improve AI-generated outputs for AI labs against detailed quality standards, applying software-engineering and LLM-evaluation judgement.</p></div>
+        </div>
+        <div class="role">
+          <span class="when">Dec 2025 – now</span>
+          <div class="what"><h3>Python Coding Specialist (Freelance)</h3><span class="org">Outlier AI · remote</span><p>Evaluate AI-generated Python code for correctness, code quality, specification adherence and debugging accuracy, and write the feedback used to train models.</p></div>
+        </div>
+        <div class="role">
+          <span class="when">Jan 2025 – Jul 2025</span>
+          <div class="what"><h3>Software Engineer Intern</h3><span class="org">HibretOne · Birmingham</span><p>Built REST APIs in Python and FastAPI, redesigned MySQL schemas to cut query latency by 15%, and added role-based access control and React.js interfaces.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap two">
+      <div>
+        <span class="eyebrow">Education</span>
+        <div class="edu" style="margin-top:16px">
+          <div><h3>MSc Computer Science</h3><span>Birmingham City University</span><span class="yrs">2024 – 2025</span></div>
+          <div><h3>BSc Mathematics, Statistics &amp; Computer Science</h3><span>Sri Ramakrishna Degree College, Rayalaseema University</span><span class="yrs">2020 – 2023</span></div>
+          <div><h3>Certifications</h3><span>Mercor: Mastering Model Mechanics, Introduction to Agents (2026) · AWS Academy Cloud Foundations (2022)</span></div>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Tools</span>
+        <div class="skills" style="margin-top:16px">
+          <div class="skillrow"><span>LLM</span><span>Anthropic API, LLM-as-judge, prompt engineering, RAG, MCP</span></div>
+          <div class="skillrow"><span>ML</span><span>PyTorch, TensorFlow / Keras, scikit-learn, Grad-CAM</span></div>
+          <div class="skillrow"><span>Retrieval</span><span>BM25, TF-IDF, embeddings, hybrid search</span></div>
+          <div class="skillrow"><span>Backend</span><span>Python, FastAPI, Pydantic, Django, SQL / MySQL</span></div>
+          <div class="skillrow"><span>Shipping</span><span>pytest, Docker, GitHub Actions, AWS, Git</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="eyebrow">Contact</span>
+      <h2>Let's talk.</h2>
+      <p>I'm looking for junior AI/ML, LLM and Python engineering roles in the UK, and remote roles with teams in India. The fastest way to reach me is LinkedIn.</p>
+      <div class="ctas">
+        <a class="btn primary" href="https://www.linkedin.com/in/sai-dumpala" target="_blank" rel="noopener">Message me on LinkedIn ↗</a>
+        <a class="btn" href="https://github.com/SAIDUMPALA01" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="https://orcid.org/0009-0001-0260-0072" target="_blank" rel="noopener">ORCID ↗</a>
+        <a class="btn" href="https://scholar.google.com/citations?user=3oToPggAAAAJ" target="_blank" rel="noopener">Scholar ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap"><span>© 2026 Sai Dumpala</span><span>London, United Kingdom</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  /* ---------- research bars (real figures from Experiment 1) ---------- */
+  const models=[["Claude Sonnet 4.6",4.70],["ChatGPT",3.88],["DeepSeek",3.00],["Blackbox AI",2.75]];
+  const bars=document.getElementById('bars');
+  models.forEach(([n,v],i)=>{
+    const row=document.createElement('div'); row.className='bar'+(i===0?' top':'');
+    row.innerHTML='<span class="name"></span><span class="track"><span class="fill"></span></span><span class="val"></span>';
+    row.querySelector('.name').textContent=n;
+    row.querySelector('.fill').style.width=(v/5*100)+'%';
+    row.querySelector('.val').textContent=v.toFixed(2);
+    bars.appendChild(row);
+  });
+
+  /* ---------- 3D instrument ---------- */
+  const stage=document.getElementById('stage');
+  const labelLayer=document.getElementById('labels');
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!window.THREE){ fail(); return; }
+  let renderer;
+  try{ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true}); }catch(e){ fail(); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.setClearColor(0x000000,0);
+  stage.insertBefore(renderer.domElement,labelLayer);
+
+  const css=getComputedStyle(document.documentElement);
+  const C=n=>new THREE.Color(css.getPropertyValue(n).trim());
+  const GRID=C('--grid'), SIGNAL=C('--signal'), PAPER=C('--paper');
+
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(42,1,0.1,100);
+  camera.position.set(0,3.1,7.6); camera.lookAt(0,0.55,0);
+  const rig=new THREE.Group(); scene.add(rig);
+
+  const UNIT=0.46; // one score point
+  const dims=["Completeness","Contextual utilisation","Factual accuracy","Confidence calibration","Consistency","Spec adherence"];
+  const ang=i=>Math.PI/2 + i*Math.PI/3;
+  const pt=(i,r,y=0)=>new THREE.Vector3(Math.cos(ang(i))*r,y,Math.sin(ang(i))*r);
+
+  // hex rings for scores 1..5
+  for(let s=1;s<=5;s++){
+    const g=new THREE.BufferGeometry().setFromPoints([...Array(7)].map((_,i)=>pt(i%6,s*UNIT)));
+    const m=new THREE.LineBasicMaterial({color:GRID,transparent:true,opacity:s===5?0.75:0.22});
+    rig.add(new THREE.Line(g,m));
+  }
+  // axes
+  const axisLabels=[];
+  dims.forEach((d,i)=>{
+    const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),pt(i,5*UNIT+0.25)]);
+    rig.add(new THREE.Line(g,new THREE.LineBasicMaterial({color:GRID,transparent:true,opacity:0.45})));
+    axisLabels.push({pos:pt(i,5*UNIT+0.62),el:addLabel(d,'lbl')});
+  });
+  // Claude's Experiment 1 profile on the four measured axes, raised as a translucent surface
+  const claude=[4.8,5.0,5.0,4.0]; // completeness, contextual, factual, confidence
+  const prof=claude.map((v,i)=>pt(i,v*UNIT,0.02));
+  const shape=new THREE.BufferGeometry();
+  const verts=[]; for(let i=0;i<prof.length-1;i++){ verts.push(0,0.02,0, prof[i].x,prof[i].y,prof[i].z, prof[i+1].x,prof[i+1].y,prof[i+1].z); }
+  shape.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+  rig.add(new THREE.Mesh(shape,new THREE.MeshBasicMaterial({color:SIGNAL,transparent:true,opacity:0.18,side:THREE.DoubleSide})));
+  rig.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0.02,0),...prof,new THREE.Vector3(0,0.02,0)]),new THREE.LineBasicMaterial({color:SIGNAL})));
+  prof.forEach(p=>{ const d=new THREE.Mesh(new THREE.SphereGeometry(0.05,12,12),new THREE.MeshBasicMaterial({color:SIGNAL})); d.position.copy(p); rig.add(d); });
+
+  // the judge at the centre
+  const judge=new THREE.Mesh(new THREE.IcosahedronGeometry(0.34,1),new THREE.MeshBasicMaterial({color:PAPER,wireframe:true,transparent:true,opacity:0.55}));
+  judge.position.y=0.55; rig.add(judge);
+  rig.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0.55,0)]),new THREE.LineBasicMaterial({color:GRID,transparent:true,opacity:0.5})));
+
+  // corpus cloud: 1,041 points, one per FastAPI doc chunk in docs-rag-eval
+  const N=1041, cp=new Float32Array(N*3);
+  let seed=7; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<N;i++){ const u=rnd()*2-1, t=rnd()*Math.PI*2, r=3.4+rnd()*1.6; const s=Math.sqrt(1-u*u);
+    cp[i*3]=Math.cos(t)*s*r; cp[i*3+1]=u*r*0.55+0.8; cp[i*3+2]=Math.sin(t)*s*r; }
+  const cg=new THREE.BufferGeometry(); cg.setAttribute('position',new THREE.BufferAttribute(cp,3));
+  const cloud=new THREE.Points(cg,new THREE.PointsMaterial({color:GRID,size:0.028,transparent:true,opacity:0.55}));
+  scene.add(cloud);
+
+  // project nodes
+  const projects=[
+    {id:'p-resumetric',name:'ResuMetric',a:0.5,y:1.55,r:2.15},
+    {id:'p-sixdim',name:'sixdim-eval',a:1.55,y:1.15,r:2.55},
+    {id:'p-rag',name:'docs-rag-eval',a:2.6,y:1.8,r:2.25},
+    {id:'p-mcp',name:'uk-visa-sponsor-mcp',a:3.75,y:1.3,r:2.6},
+    {id:'p-cnn',name:'Pneumonia CNN',a:4.9,y:1.65,r:2.3}
+  ];
+  const nodes=[];
+  projects.forEach(p=>{
+    const pos=new THREE.Vector3(Math.cos(p.a)*p.r,p.y,Math.sin(p.a)*p.r);
+    const m=new THREE.Mesh(new THREE.OctahedronGeometry(0.13,0),new THREE.MeshBasicMaterial({color:SIGNAL}));
+    m.position.copy(pos); m.userData=p; rig.add(m);
+    const stem=new THREE.Line(new THREE.BufferGeometry().setFromPoints([pos,new THREE.Vector3(pos.x,0,pos.z)]),new THREE.LineDashedMaterial({color:SIGNAL,dashSize:0.06,gapSize:0.06,transparent:true,opacity:0.5}));
+    stem.computeLineDistances(); rig.add(stem);
+    const el=addLabel(p.name,'lbl proj');
+    el.setAttribute('role','button'); el.tabIndex=0;
+    const go=()=>jump(p.id);
+    el.addEventListener('click',go);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }});
+    nodes.push({mesh:m,el,lift:pos.clone().add(new THREE.Vector3(0,0.3,0)),p});
+  });
+
+  function addLabel(text,cls){ const d=document.createElement('div'); d.className=cls; d.textContent=text; labelLayer.appendChild(d); return d; }
+  function jump(id){
+    const card=document.getElementById(id); if(!card) return;
+    card.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+    card.classList.add('flash'); setTimeout(()=>card.classList.remove('flash'),1600);
+  }
+  function fail(){ const d=document.createElement('div'); d.className='nogl'; d.textContent='3D view needs WebGL. The projects are listed below.'; stage.appendChild(d); const cap=stage.querySelector('.stage-cap'); if(cap) cap.hidden=true; }
+
+  // sizing
+  function size(){ const w=stage.clientWidth,h=stage.clientHeight; if(!w||!h) return; renderer.setSize(w,h,false); camera.aspect=w/h; camera.position.z = w/h<0.9?9.4:7.6; camera.updateProjectionMatrix(); }
+  new ResizeObserver(size).observe(stage); size();
+
+  // interaction: drag to rotate, hover/tap nodes
+  let yaw=0.35, pitch=0.0, vy=0, dragging=false, lx=0, ly=0, moved=0, hot=null;
+  const ray=new THREE.Raycaster(), mouse=new THREE.Vector2();
+  stage.addEventListener('pointerdown',e=>{ if(e.target.classList.contains('proj')) return; dragging=true; moved=0; lx=e.clientX; ly=e.clientY; stage.classList.add('drag'); stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener('pointermove',e=>{
+    const r=stage.getBoundingClientRect(); mouse.set((e.clientX-r.left)/r.width*2-1, -(e.clientY-r.top)/r.height*2+1);
+    if(dragging){ const dx=e.clientX-lx, dy=e.clientY-ly; moved+=Math.abs(dx)+Math.abs(dy); yaw+=dx*0.008; vy=dx*0.008; pitch=Math.max(-0.35,Math.min(0.45,pitch+dy*0.004)); lx=e.clientX; ly=e.clientY; }
+  });
+  const end=e=>{ if(!dragging) return; dragging=false; stage.classList.remove('drag'); if(moved<6 && hot) jump(hot.p.id); };
+  stage.addEventListener('pointerup',end); stage.addEventListener('pointercancel',()=>{dragging=false;stage.classList.remove('drag');});
+  stage.addEventListener('pointerleave',()=>{ mouse.set(9,9); });
+
+  const v=new THREE.Vector3();
+  function place(el,world){
+    v.copy(world).applyMatrix4(rig.matrixWorld).project(camera);
+    const vis=v.z<1 && Math.abs(v.x)<1.05 && Math.abs(v.y)<1.05;
+    el.style.opacity=vis?1:0;
+    el.style.left=((v.x+1)/2*100)+'%'; el.style.top=((1-v.y)/2*100)+'%';
+  }
+
+  let t0=performance.now(), visible=true;
+  new IntersectionObserver(es=>{ visible=es[0].isIntersecting; }).observe(stage);
+  function frame(now){
+    requestAnimationFrame(frame);
+    if(!visible) return;
+    const dt=Math.min(0.05,(now-t0)/1000); t0=now;
+    if(!dragging){ vy*=0.94; yaw+=vy + (reduce?0:dt*0.12); }
+    rig.rotation.y=yaw; rig.rotation.x=pitch;
+    if(!reduce){ judge.rotation.y+=dt*0.6; judge.rotation.x+=dt*0.25; cloud.rotation.y-=dt*0.03; }
+    rig.updateMatrixWorld();
+    // hover
+    ray.setFromCamera(mouse,camera);
+    const hit=ray.intersectObjects(nodes.map(n=>n.mesh))[0];
+    const h=hit?nodes.find(n=>n.mesh===hit.object):null;
+    if(h!==hot){ if(hot){hot.mesh.scale.setScalar(1);hot.el.classList.remove('hot');} hot=h; if(hot){hot.mesh.scale.setScalar(1.6);hot.el.classList.add('hot');} stage.style.cursor=hot?'pointer':''; }
+    nodes.forEach(n=>{ if(!reduce) n.mesh.rotation.y+=dt*1.2; place(n.el,n.lift); });
+    axisLabels.forEach(a=>place(a.el,a.pos));
+    renderer.render(scene,camera);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
