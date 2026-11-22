@@ -161,8 +161,8 @@
         <div class="stats intro" style="--d:7">
           <div class="stat"><p class="stat__num" data-count="1">1</p><p class="stat__label">Published paper</p><p class="stat__desc">Six-dimension LLM evaluation framework, Zenodo 2026</p></div>
           <div class="stat"><p class="stat__num" data-count="4">4</p><p class="stat__label">LLMs benchmarked</p><p class="stat__desc">Claude, ChatGPT, DeepSeek and Blackbox AI</p></div>
-          <div class="stat"><p class="stat__num" data-count="5">5</p><p class="stat__label">Open-source projects</p><p class="stat__desc">Each with CI and an evaluation of how well it works</p></div>
-          <div class="stat"><p class="stat__num" data-count="130" data-suffix="+">130+</p><p class="stat__label">Automated tests</p><p class="stat__desc">All run without an API key or network</p></div>
+          <div class="stat"><p class="stat__num" data-count="6">6</p><p class="stat__label">Open-source projects</p><p class="stat__desc">Each with CI and an evaluation of how well it works</p></div>
+          <div class="stat"><p class="stat__num" data-count="170" data-suffix="+">170+</p><p class="stat__label">Automated tests</p><p class="stat__desc">All run without an API key or network</p></div>
         </div>
       </div>
     </section>
@@ -313,6 +313,43 @@
   - 70% of the going rate = £38,290</code></pre>
             </div>
             <p class="visual__note">Exit codes make it scriptable: 0 meets the rule, 1 doesn't, 2 is an input error.</p>
+          </div>
+        </article>
+
+        <!-- support-agent-eval -->
+        <article class="project reveal" id="support-agent-eval">
+          <div class="project__text">
+            <div class="project__meta">
+              <span class="tag">AI agent · Evaluation</span>
+              <img class="badge" src="https://github.com/SAIDUMPALA01/support-agent-eval/actions/workflows/ci.yml/badge.svg" alt="support-agent-eval CI status" loading="lazy" width="104" height="20">
+            </div>
+            <h3>support-agent-eval</h3>
+            <p class="project__pitch">A customer support agent that uses tools to verify customers, look up orders, issue refunds, change addresses and hand over to a human, plus a harness that checks what it actually did, not just what it said.</p>
+            <ul class="points">
+              <li><strong>Graded from the audit log:</strong> every refund and address change is recorded with whether the customer was verified, so an agent can't pass by claiming it checked.</li>
+              <li><strong>24 scenarios, two scores:</strong> did it solve the problem, and did it break the rules (unverified refunds, prompt injection in order notes, leaking another customer's details). Reports pass rate and pass^k.</li>
+              <li><strong>One loop, two providers:</strong> adapters for the Anthropic and OpenAI tool-use APIs. A deliberately unsafe agent fails 22 of 24 scenarios, which proves the grader catches real failures.</li>
+            </ul>
+            <ul class="chips" aria-label="Stack"><li>AI agents</li><li>Tool calling</li><li>Python</li><li>Anthropic / OpenAI</li><li>Pytest</li><li>CI quality gate</li></ul>
+            <div class="links">
+              <a href="https://github.com/SAIDUMPALA01/support-agent-eval" target="_blank" rel="noopener">Code ↗</a>
+            </div>
+          </div>
+          <div class="project__visual">
+            <div class="code code--term">
+              <div class="code__head"><span>terminal</span><span class="code__lang">support-agent-eval run</span></div>
+<pre><code><span class="c-p">$</span> support-agent-eval run --agent rules
+Pass rate                         <span class="c-k">100.0%</span>  (24/24)
+Conversations with a violation    <span class="c-k">0</span>
+
+<span class="c-p">$</span> support-agent-eval run --agent naive
+Pass rate                         <span class="c-bad">8.3%</span>   (2/24)
+Conversations with a violation    <span class="c-bad">20</span>
+  refund_unverified               16
+  refund_not_allowed               7
+  leaked_other_customer_data       4</code></pre>
+            </div>
+            <p class="visual__note">CI runs both on every commit, and fails if the safe agent slips or the unsafe one gets through.</p>
           </div>
         </article>
 

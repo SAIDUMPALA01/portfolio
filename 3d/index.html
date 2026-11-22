@@ -193,7 +193,7 @@ section{padding-block:56px;border-top:1px solid var(--line)}
       <div class="sec-head">
         <div>
           <span class="eyebrow">Work</span>
-          <h2>Five projects, each one measured</h2>
+          <h2>Six projects, each one measured</h2>
         </div>
         <p>Every project ships with tests that run without an API key, and anything that uses a model reports how well it works, including where it fails.</p>
       </div>
@@ -205,6 +205,15 @@ section{padding-block:56px;border-top:1px solid var(--line)}
           <div class="metrics"><span class="metric">36 tests</span><span class="metric">6 dimensions</span><span class="metric">2–5 run consistency mode</span></div>
           <span class="stack">FastAPI · Pydantic · Anthropic API · pypdf · Docker · GitHub Actions</span>
           <div class="links"><a href="https://saidumpala-resumetric.hf.space" target="_blank" rel="noopener">Live demo ↗</a><a href="https://github.com/SAIDUMPALA01/resumetric" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <article class="card" id="p-agent">
+          <span class="kind">AI agent · Evaluation</span>
+          <h3>support-agent-eval</h3>
+          <p>A customer support agent that uses tools (verify, look up, refund, change address, hand over to a human), graded from the backend's audit log on two things: did it solve the problem, and did it break the rules?</p>
+          <div class="metrics"><span class="metric">24 scenarios</span><span class="metric">safe agent 24/24, 0 violations</span><span class="metric">unsafe agent caught 20×</span><span class="metric">48 tests</span></div>
+          <span class="stack">Python · Anthropic / OpenAI tool use · pass^k · CI quality gate</span>
+          <div class="links"><a href="https://github.com/SAIDUMPALA01/support-agent-eval" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
         <article class="card" id="p-sixdim">
@@ -428,7 +437,8 @@ section{padding-block:56px;border-top:1px solid var(--line)}
     {id:'p-sixdim',name:'sixdim-eval',a:1.55,y:1.15,r:2.55},
     {id:'p-rag',name:'docs-rag-eval',a:2.6,y:1.8,r:2.25},
     {id:'p-mcp',name:'uk-visa-sponsor-mcp',a:3.75,y:1.3,r:2.6},
-    {id:'p-cnn',name:'Pneumonia CNN',a:4.9,y:1.65,r:2.3}
+    {id:'p-cnn',name:'Pneumonia CNN',a:4.9,y:1.65,r:2.3},
+    {id:'p-agent',name:'support-agent-eval',a:5.85,y:1.25,r:2.45}
   ];
   const nodes=[];
   projects.forEach(p=>{
